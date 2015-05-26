@@ -7,7 +7,6 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -58,14 +57,22 @@ public class MainActivity extends Activity implements OnClickListener{
 			@Override
 			public void start() {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "Download started...", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Download started...", Toast.LENGTH_SHORT).show();
+				if(mProgressDialog == null){
+				 	mProgressDialog = new ProgressDialog(MainActivity.this);
+					mProgressDialog.setMessage("On Progress...");
+					mProgressDialog.setCancelable(true);
+				 }
+				 mProgressDialog.show(); 	
 			}
 
 			@Override
 			public void finish() {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "Download finished...", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(), "Download finished...", Toast.LENGTH_SHORT).show();
 				mStartDownloadButton.setEnabled(true);
+				mProgressDialog.dismiss();
+				mProgressDialog = null;
 			}	
 		};
 		
@@ -127,13 +134,6 @@ private Bitmap downloadBitmap(String url, final CallBack cb) {
 				Options optionSample = new BitmapFactory.Options();
 				optionSample.inSampleSize = 4; // Or 8 for smaller image
 				Bitmap bitmap = BitmapFactory.decodeStream(inputStream,null,optionSample);
-				return bitmap;
-				
-			} finally { 
-				if (inputStream != null) { 
-					inputStream.close(); 
-					} 
-				//entity.consumeContent();
 				MainActivity.this.runOnUiThread(new Runnable(){
 					@Override
 				    public void run() {
@@ -141,6 +141,13 @@ private Bitmap downloadBitmap(String url, final CallBack cb) {
 						cb.finish();
 					}
 				});
+				return bitmap;
+				
+			} finally { 
+				if (inputStream != null) { 
+					inputStream.close(); 
+					} 
+				//entity.consumeContent();
 				} 
 			} 
 		} catch (Exception e) {
