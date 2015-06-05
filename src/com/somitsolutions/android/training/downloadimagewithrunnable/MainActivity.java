@@ -7,6 +7,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +35,7 @@ public class MainActivity extends Activity implements OnClickListener{
 	Runnable mDownloadRunnable;
 	CallBack mCb;
 	String mUrl;
+	Handler mHandler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,6 +50,8 @@ public class MainActivity extends Activity implements OnClickListener{
 		mDisplayImageButton.setOnClickListener(this);
 		
 		context = this;
+		
+		mHandler = new Handler();
 		
 		mProgressDialog = new ProgressDialog(this);
 		mProgressDialog.setMessage("On Progress...");
@@ -123,24 +128,55 @@ private Bitmap downloadBitmap(String url, final CallBack cb) {
 		if (entity != null) { 
 			InputStream inputStream = null;
 			try {
-				MainActivity.this.runOnUiThread(new Runnable(){
+				//One way of communication with the UI thread
+				//Method 1a Start
+				/*MainActivity.this.runOnUiThread(new Runnable(){
 					@Override
 				    public void run() {
 				        //execute code on main thread
 						cb.start();
 					}
+				});*/
+				//Method 1a end
+				//Another way of communication with the UI thread by passing a Runnable through the Handler
+				//Method 2a start
+				mHandler.post(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						cb.start();
+					}
+					
 				});
+				//Method 2a end
 				inputStream = entity.getContent();
 				Options optionSample = new BitmapFactory.Options();
 				optionSample.inSampleSize = 4; // Or 8 for smaller image
 				Bitmap bitmap = BitmapFactory.decodeStream(inputStream,null,optionSample);
-				MainActivity.this.runOnUiThread(new Runnable(){
+				
+				//One way of communication with the UI thread
+				//Method 1b Start
+				/*MainActivity.this.runOnUiThread(new Runnable(){
 					@Override
 				    public void run() {
 				        //execute code on main thread
 						cb.finish();
 					}
+				});*/
+				//Method 1b end
+				
+				//Another way of communication with the UI thread by passing a Runnable through the Handler
+				//Method 2b start
+				mHandler.post(new Runnable(){
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						cb.finish();
+					}
 				});
+				//Method 2b end
 				return bitmap;
 				
 			} finally { 
