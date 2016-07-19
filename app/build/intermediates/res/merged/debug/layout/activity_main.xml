@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}" >
+
+     <Button
+         android:id="@+id/buttonDisplayImage"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_alignParentBottom="true"
+         android:layout_alignParentLeft="true"
+         android:text="DisplayImage" />
+
+     <Button
+         android:id="@+id/buttonDownloadImage"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_above="@+id/buttonDisplayImage"
+         android:layout_alignParentLeft="true"
+         android:layout_marginBottom="17dp"
+         android:text="DownloadImage" />
+
+     <EditText
+         android:id="@+id/editTextURL"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_alignParentRight="true"
+         android:layout_alignParentTop="true"
+         android:layout_marginTop="25dp"
+         android:ems="10"
+         android:hint="URL" />
+
+     <ImageView
+         android:id="@+id/imageView1"
+         android:layout_width="150dp"
+         android:layout_height="150dp"
+         android:layout_above="@+id/buttonDownloadImage"
+         android:layout_centerHorizontal="true"
+         android:layout_marginBottom="60dp"
+         android:scaleType="fitXY"
+         android:src="@drawable/ic_launcher" />
+
+
+</RelativeLayout>
